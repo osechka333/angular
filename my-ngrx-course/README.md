@@ -6,7 +6,6 @@ TO START WITH APPLICATION:
 5) ng generate store auth/Auth --module auth.module.ts
 
 
-
 ## Ngrx (with NgRx Data) - The Complete Guide
 
 This repository contains the code of the video course [Ngrx (with NgRx Data) - The Complete Guide](https://angular-university.io/course/ngrx-course).
