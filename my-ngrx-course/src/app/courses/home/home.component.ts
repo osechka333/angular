@@ -20,6 +20,7 @@ import {selectAdvancedCourses, selectBeginnerCourses, selectPromoTotal} from "..
 export class HomeComponent implements OnInit {
 
     promoTotal$: Observable<number>;
+    loading$: Observable<boolean>; //added
 
     beginnerCourses$: Observable<Course[]>;
 
@@ -28,7 +29,8 @@ export class HomeComponent implements OnInit {
 
     constructor(
       private dialog: MatDialog,
-      private store: Store<AppState>) {
+      //private store: Store<AppState>
+      private coursesHttpService: CoursesHttpService) {
 
     }
 
@@ -37,34 +39,33 @@ export class HomeComponent implements OnInit {
     }
 
   reload() {
-      this.beginnerCourses$ = this.store.pipe(select(selectBeginnerCourses));
-      this.advancedCourses$ = this.store.pipe(select(selectAdvancedCourses));
-      this.promoTotal$ = this.store.pipe(select(selectPromoTotal));
+      // this.beginnerCourses$ = this.store.pipe(select(selectBeginnerCourses));
+      // this.advancedCourses$ = this.store.pipe(select(selectAdvancedCourses));
+      // this.promoTotal$ = this.store.pipe(select(selectPromoTotal));
+
+    const courses$ = this.coursesHttpService.findAllCourses()
+      .pipe(
+        map(courses => courses.sort(compareCourses)),
+        shareReplay()
+      );
+
+    this.loading$ = courses$.pipe(map(courses => !!courses));
+
+    this.beginnerCourses$ = courses$
+      .pipe(
+        map(courses => courses.filter(course => course.category == 'BEGINNER'))
+      );
 
 
-    // const courses$ = this.coursesHttpService.findAllCourses()
-    //   .pipe(
-    //     map(courses => courses.sort(compareCourses)),
-    //     shareReplay()
-    //   );
-    //
-    // this.loading$ = courses$.pipe(map(courses => !!courses));
-    //
-    // this.beginnerCourses$ = courses$
-    //   .pipe(
-    //     map(courses => courses.filter(course => course.category == 'BEGINNER'))
-    //   );
-    //
-    //
-    // this.advancedCourses$ = courses$
-    //   .pipe(
-    //     map(courses => courses.filter(course => course.category == 'ADVANCED'))
-    //   );
-    //
-    // this.promoTotal$ = courses$
-    //     .pipe(
-    //         map(courses => courses.filter(course => course.promo).length)
-    //     );
+    this.advancedCourses$ = courses$
+      .pipe(
+        map(courses => courses.filter(course => course.category == 'ADVANCED'))
+      );
+
+    this.promoTotal$ = courses$
+        .pipe(
+            map(courses => courses.filter(course => course.promo).length)
+        );
 
   }
 
@@ -80,6 +81,4 @@ export class HomeComponent implements OnInit {
     this.dialog.open(EditCourseDialogComponent, dialogConfig);
 
   }
-
-
 }
