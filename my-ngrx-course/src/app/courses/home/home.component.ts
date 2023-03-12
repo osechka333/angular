@@ -9,6 +9,7 @@ import {CoursesHttpService} from '../services/courses-http.service';
 import {AppState} from "../../reducers";
 import {select, Store} from "@ngrx/store";
 import {selectAdvancedCourses, selectBeginnerCourses, selectPromoTotal} from "../courses.selectors";
+import {CoursesEntityService} from "../services/course-entity.service";
 
 
 
@@ -30,7 +31,8 @@ export class HomeComponent implements OnInit {
     constructor(
       private dialog: MatDialog,
       //private store: Store<AppState>
-      private coursesHttpService: CoursesHttpService) {
+      // private coursesHttpService: CoursesHttpService
+      private coursesService: CoursesEntityService) {
 
     }
 
@@ -43,29 +45,45 @@ export class HomeComponent implements OnInit {
       // this.advancedCourses$ = this.store.pipe(select(selectAdvancedCourses));
       // this.promoTotal$ = this.store.pipe(select(selectPromoTotal));
 
-    const courses$ = this.coursesHttpService.findAllCourses()
-      .pipe(
-        map(courses => courses.sort(compareCourses)),
-        shareReplay()
-      );
-
-    this.loading$ = courses$.pipe(map(courses => !!courses));
-
-    this.beginnerCourses$ = courses$
+    this.beginnerCourses$ = this.coursesService.entities$
       .pipe(
         map(courses => courses.filter(course => course.category == 'BEGINNER'))
       );
 
-
-    this.advancedCourses$ = courses$
+    this.advancedCourses$ = this.coursesService.entities$
       .pipe(
         map(courses => courses.filter(course => course.category == 'ADVANCED'))
       );
 
-    this.promoTotal$ = courses$
+    this.promoTotal$ = this.coursesService.entities$
         .pipe(
             map(courses => courses.filter(course => course.promo).length)
         );
+
+
+    // const courses$ = this.coursesHttpService.findAllCourses()
+    //   .pipe(
+    //     map(courses => courses.sort(compareCourses)),
+    //     shareReplay()
+    //   );
+    //
+    // this.loading$ = courses$.pipe(map(courses => !!courses));
+    //
+    // this.beginnerCourses$ = courses$
+    //   .pipe(
+    //     map(courses => courses.filter(course => course.category == 'BEGINNER'))
+    //   );
+    //
+    //
+    // this.advancedCourses$ = courses$
+    //   .pipe(
+    //     map(courses => courses.filter(course => course.category == 'ADVANCED'))
+    //   );
+    //
+    // this.promoTotal$ = courses$
+    //     .pipe(
+    //         map(courses => courses.filter(course => course.promo).length)
+    //     );
 
   }
 

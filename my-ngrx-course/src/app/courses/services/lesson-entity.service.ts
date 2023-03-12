@@ -1,10 +1,10 @@
 import {EntityCollectionServiceBase, EntityCollectionServiceElementsFactory} from "@ngrx/data";
-import {Course} from "../model/course";
 import {Injectable} from "@angular/core";
+import {Lesson} from "../model/lesson";
 
 @Injectable()
-export class CoursesEntityService extends EntityCollectionServiceBase<Course> {
+export class LessonEntityService extends EntityCollectionServiceBase<Lesson> {
   constructor(serviceElementsFactory: EntityCollectionServiceElementsFactory) {
-    super("Course", serviceElementsFactory);
+    super("Lesson", serviceElementsFactory);
   }
 }

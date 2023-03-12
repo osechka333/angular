@@ -8,6 +8,7 @@ import {Store} from "@ngrx/store";
 import {AppState} from "../../reducers";
 import {Update} from "@ngrx/entity";
 import {courseUpdated} from "../course.actions";
+import {CoursesEntityService} from "../services/course-entity.service";
 
 @Component({
   selector: 'course-dialog',
@@ -30,8 +31,10 @@ export class EditCourseDialogComponent {
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<EditCourseDialogComponent>,
     @Inject(MAT_DIALOG_DATA) data,
-    private store: Store<AppState>
-    // private coursesService: CoursesHttpService - to call backend directly
+    // private store: Store<AppState>
+     //private coursesService: CoursesHttpService // to call backend directly
+
+    private coursesService: CoursesEntityService
     ) {
 
     this.dialogTitle = data.dialogTitle;
@@ -74,14 +77,23 @@ export class EditCourseDialogComponent {
     //     () => this.dialogRef.close()
     //   )
 
-    const update: Update<Course> = {
-      id: course.id,
-      changes: course
+    // const update: Update<Course> = {
+    //   id: course.id,
+    //   changes: course
+    // }
+
+    // this.store.dispatch(courseUpdated({update}));
+    //this.dialogRef.close();
+
+    if(this.mode == 'update') {
+      this.coursesService.update(course);
+      this.dialogRef.close();
+    } else if(this.mode == 'create'){
+      this.coursesService.add(course).subscribe(newCourse => {
+        console.log('New Course added', newCourse);
+        this.dialogRef.close();
+      })
     }
-
-    this.store.dispatch(courseUpdated({update}));
-    this.dialogRef.close();
-
   }
 
 
