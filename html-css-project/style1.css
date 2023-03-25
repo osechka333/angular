@@ -1,0 +1,21 @@
+h3{
+    color: rgb(32,32,3123);
+}
+.first-form{
+    color: darkslateblue;
+}
+#link{
+    color: #00c853;
+}
+* {
+    font-size: 20px;
+}
+.class li {
+    color: #00c853;
+}
+.class li a {
+    color: #1b5e20;
+}
+.class li:nth-child(1){
+    color: #66bb6a;
+}

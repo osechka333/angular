@@ -1,1 +1,1 @@
-{"devDependencies":{"prettier":"2.8.4"}}
+{"devDependencies":{"prettier":"2.8.4"},"dependencies":{"specificity":"^0.4.1"}}
